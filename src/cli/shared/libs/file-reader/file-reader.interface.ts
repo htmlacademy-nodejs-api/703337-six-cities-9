@@ -1,4 +1,4 @@
-// export interface FileReader {
-//   read(): void;
-// }
+export interface FileReader {
+  read(): void;
+}
 

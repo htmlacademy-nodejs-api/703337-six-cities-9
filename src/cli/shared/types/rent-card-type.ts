@@ -1,37 +1,29 @@
+import { UserData } from './user-data.js';
+import { City } from './city.js';
+import { RentType } from './rent-type.enum.js';
+
 export type RentCardType = {
   id: string;
   title: string;
   description: string;
-  date: string;
-  city: {
-    name: string;
-    location: {
-      latitude: number;
-      longitude: number;
-      zoom: number;
-    };
-  };
+  date: Date;
+  city: City;
   previewImage: string;
   images: string[];
   isPremium: boolean;
   isFavorite: boolean;
   rating: number;
-  type: string;
+  type: RentType;
   bedrooms: number;
   maxAdults: number;
   price: number;
   goods: string[];
-  host: {
-    name: string;
-    avatarUrl: string;
-    isPro: boolean;
-  };
+  host: UserData;
+  comments: number;
   location: {
     latitude: number;
     longitude: number;
-    zoom: number;
   };
-  comments: number;
 }
 
 export type RentCardsType = RentCardType[];
