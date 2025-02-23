@@ -1,0 +1,52 @@
+{
+  "api": {
+    "id": ["6af6f711-c28d-4121-82cd-e0b462a27f00", "6af6f711-c28d-4121-82cd-e0b462a27f01", "6af6f711-c28d-4121-82cd-e0b462a27f02", "6af6f711-c28d-4121-82cd-e0b462a27f03"],
+    "title": [
+      "Beautiful & luxurious studio at great location", "Чудесная комната в центре", "Апартаменты у парка", "Дом у озера", "Прекрасная студия"
+    ],
+    "description": [
+      "Beautiful & luxurious studio at great location", "Чудесная комната в центре", "Апартаменты у парка", "Дом у озера", "Прекрасная студия"
+    ],
+    "date": [
+      "13/02/2025", "14/02/2025", "15/02/2025", "16/02/2025", "17/02/2025"
+    ],
+    "name": [
+      "Paris", "Cologne", "Brussels", "Amsterdam", "Hamburg", "Dusseldorf"
+    ],
+    "latitude": [52.35514938496378, 52.35514938496378, 52.35514938496378],
+    "longitude": [4.673877537499948, 4.673877537499948, 4.673877537499948],
+    "previewImage": ["img/apartment-02.jpg", "img/apartment-01.jpg", "img/apartment-03.jpg", "img/apartment-small-04.jpg"],
+    "images": ["img/avatar-max.jpg", "studio-01.jpg", "studio-photos.jpg"],
+    "isPremium": [true, false, false, true, false],
+    "isFavorite": [false, true, true, false, false],
+    "rating": [5, 4, 3, 2, 1],
+    "categories": [
+        "apartment", "house", "room", "hotel"
+      ],
+    "bedrooms": [5, 10, 678, 4, 90],
+    "maxAdults": [78, 98, 76, 78, 100],
+    "price": [5, 7, 8, 9, 2],
+    "goods": ["Breakfast", "Air conditioning", "Laptop friendly workspace", "Baby seat", "Washer", "Towels", "Fridge"],
+    "nameHost": [
+      "Иван Иванов",
+      "Олег Сидоров",
+      "Пьер Безухов",
+      "Роланд Дискейн",
+      "Холи Гибни"
+    ],
+    "email": [
+      "snow@pisem.local",
+      "president@dka.local",
+      "fish@big.local",
+      "test@pisem.local",
+      "freedom@pisem.local"
+    ],
+    "avatarUrl": ["img/avatar-max.jpg", "img/avatar-angelina.jpg"],
+    "password": ["ggg", "vvv", "ddd", "eee"],
+    "isPro": [true, false, true, false, true],
+    "comments": [4, 5, 2, 90, 8],
+    "latitudeCard": [52.35514938496378, 52.35514938496378],
+    "longitudeCard": [4.673877537499948, 4.673877537499948]
+    
+  }
+}

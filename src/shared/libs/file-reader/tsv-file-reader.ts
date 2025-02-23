@@ -1,30 +1,30 @@
-import { readFileSync } from 'node:fs';
+
 import { FileReader } from './file-reader.interface.js';
-import { RentType } from '../../types/rent-type.enum.js';
-import { RentCardType } from '../../types/rent-card-type.js';
-import { UserData } from '../../types/user-data.js';
-import { City } from '../../types/city.js';
+import { RentType, RentCardType, UserData, City } from './index.js';
+import EventEmitter from 'node:events';
+import { createReadStream } from 'node:fs';
 
-
-export class TSVFileReader implements FileReader {
-  private rawData = '';
+export class TSVFileReader extends EventEmitter implements FileReader {
+  private CHUNK_SIZE = 16384;
 
   constructor(
     private readonly filename: string
-  ) {}
-
-  private validateRawData(): void {
-    if (! this.rawData) {
-      throw new Error('File was not read');
-    }
+  ) {
+    super();
   }
 
-  private parseRawDataToOffers(): RentCardType[] {
-    return this.rawData
-      .split('\n')
-      .filter((row) => row.trim().length > 0)
-      .map((line) => this.parseLineToOffer(line));
-  }
+  // private validateRawData(): void {
+  //   if (! this.rawData) {
+  //     throw new Error('File was not read');
+  //   }
+  // }
+
+  // private parseRawDataToOffers(): RentCardType[] {
+  //   return this.rawData
+  //     .split('\n')
+  //     .filter((row) => row.trim().length > 0)
+  //     .map((line) => this.parseLineToOffer(line));
+  // }
 
   private parseLineToOffer(line: string): RentCardType {
     const [
@@ -55,6 +55,8 @@ export class TSVFileReader implements FileReader {
       rentLocationLongitude,
     ] = line.split('\t');
 
+    const newType = type[0].toUpperCase() + type.slice(1);
+
     return {
       id,
       title,
@@ -66,7 +68,7 @@ export class TSVFileReader implements FileReader {
       isPremium: Boolean(isPremium),
       isFavorite: Boolean(isFavorite),
       rating: Number(rating),
-      type: RentType[type as 'Room' | 'Apartment'],
+      type: RentType[newType as 'Apartment' | 'Room' | 'Hotel' | 'House'],
       bedrooms: Number(bedrooms),
       maxAdults: Number(maxAdults),
       price: this.parsePrice(price),
@@ -102,12 +104,29 @@ export class TSVFileReader implements FileReader {
     return { name: hostName, email: hostEmail, avatarUrl: hostAvatarUrl, password: hostPassword, isPro: Boolean(hostisPro) };
   }
 
-  public read(): void {
-    this.rawData = readFileSync(this.filename, { encoding: 'utf-8' });
-  }
+  public async read(): Promise<void> {
+    const readStream = createReadStream(this.filename, {
+      highWaterMark: this.CHUNK_SIZE,
+      encoding: 'utf-8',
+    });
 
-  public toArray(): RentCardType[] {
-    this.validateRawData();
-    return this.parseRawDataToOffers();
+    let remainingData = '';
+    let nextLinePosition = -1;
+    let importedRowCount = 0;
+
+    for await (const chunk of readStream) {
+      remainingData += chunk.toString();
+
+      while ((nextLinePosition = remainingData.indexOf('\n')) >= 0) {
+        const completeRow = remainingData.slice(0, nextLinePosition + 1);
+        remainingData = remainingData.slice(++nextLinePosition);
+        importedRowCount++;
+
+        const parsedOffer = this.parseLineToOffer(completeRow);
+        this.emit('line', parsedOffer);
+      }
+    }
+
+    this.emit('end', importedRowCount);
   }
 }
