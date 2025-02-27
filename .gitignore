@@ -10,3 +10,4 @@ mock-offers.tsv
 .DS_Store
 coverage
 *.log
+.env
