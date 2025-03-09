@@ -17,3 +17,4 @@ function bootstrap() {
 
 bootstrap();
 
+//npm run ts ./src/main.cli.js -- --generate 10 ./mocks/mock-offers.tsv http://localhost:3123/api
