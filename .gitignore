@@ -5,7 +5,7 @@
 /dist/
 /docs/
 .idea/*
-mock-offers.tsv
+
 
 .DS_Store
 coverage

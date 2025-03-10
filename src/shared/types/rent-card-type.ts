@@ -19,11 +19,11 @@ export type RentCardType = {
   price: number;
   goods: string[];
   host: UserData;
+  password: string;
   comments: number;
-  location: {
-    latitude: number;
-    longitude: number;
-  };
+  latitude: number;
+  longitude: number;
+
 }
 
 export type RentCardsType = RentCardType[];

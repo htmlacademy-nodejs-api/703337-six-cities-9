@@ -37,8 +37,9 @@ export class TSVOfferGenerator implements OfferGenerator {
     const avatar = getRandomItem(this.mockData.avatarUrl);
     const passw = getRandomItem(this.mockData.password);
     const profy = getRandomItem(this.mockData.isPro);
+    const comments = getRandomItem(this.mockData.comments);
     const latitudeCard = getRandomItem<number>(this.mockData.latitudeCard);
-    const longitudeCars = getRandomItem<number>(this.mockData.longitudeCard);
+    const longitudeCard = getRandomItem<number>(this.mockData.longitudeCard);
 
     const createdDate = dayjs()
       .subtract(generateRandomValue(FIRST_WEEK_DAY, LAST_WEEK_DAY), 'day')
@@ -47,7 +48,7 @@ export class TSVOfferGenerator implements OfferGenerator {
     return [
       id, title, description, createdDate, name, latitude, longitude, previewImage, images, isPremium, isFavorite, rating, type,
       bedroom, maxAdults, price, goods, author, email, avatar,
-      passw, profy, latitudeCard, longitudeCars
+      profy, passw, comments, latitudeCard, longitudeCard
     ].join('\t');
   }
 }

@@ -13,19 +13,6 @@ export class TSVFileReader extends EventEmitter implements FileReader {
     super();
   }
 
-  // private validateRawData(): void {
-  //   if (! this.rawData) {
-  //     throw new Error('File was not read');
-  //   }
-  // }
-
-  // private parseRawDataToOffers(): RentCardType[] {
-  //   return this.rawData
-  //     .split('\n')
-  //     .filter((row) => row.trim().length > 0)
-  //     .map((line) => this.parseLineToOffer(line));
-  // }
-
   private parseLineToOffer(line: string): RentCardType {
     const [
       id,
@@ -48,8 +35,8 @@ export class TSVFileReader extends EventEmitter implements FileReader {
       hostName,
       hostEmail,
       hostAvatarUrl,
-      hostPassword,
       hostisPro,
+      password,
       comments,
       rentLocationLatitude,
       rentLocationLongitude,
@@ -73,12 +60,12 @@ export class TSVFileReader extends EventEmitter implements FileReader {
       maxAdults: Number(maxAdults),
       price: this.parsePrice(price),
       goods: this.parseImages(goods),
-      host: this.parseUser(hostName, hostEmail, hostAvatarUrl, hostPassword, hostisPro),
+      host: this.parseUser(hostName, hostEmail, hostAvatarUrl, hostisPro),
+      password: String(password),
       comments: Number(comments),
-      location:{
-        latitude: Number(rentLocationLatitude),
-        longitude: Number(rentLocationLongitude),
-      }
+      latitude: Number(rentLocationLatitude),
+      longitude: Number(rentLocationLongitude),
+
     };
   }
 
@@ -93,15 +80,13 @@ export class TSVFileReader extends EventEmitter implements FileReader {
   private parseCity(cityName: string, locationLatitude: string, locationLongitude: string): City {
     return {
       name: cityName,
-      location: {
-        latitude: Number(locationLatitude),
-        longitude: Number(locationLongitude),
-      }
+      latitude: Number(locationLatitude),
+      longitude: Number(locationLongitude),
     };
   }
 
-  private parseUser(hostName: string, hostEmail: string, hostAvatarUrl: string, hostPassword: string, hostisPro: string): UserData {
-    return { name: hostName, email: hostEmail, avatarUrl: hostAvatarUrl, password: hostPassword, isPro: Boolean(hostisPro) };
+  private parseUser(hostName: string, hostEmail: string, hostAvatarUrl: string, hostisPro: string): UserData {
+    return { name: hostName, email: hostEmail, avatarUrl: hostAvatarUrl, isPro: String(hostisPro) };
   }
 
   public async read(): Promise<void> {
@@ -123,7 +108,9 @@ export class TSVFileReader extends EventEmitter implements FileReader {
         importedRowCount++;
 
         const parsedOffer = this.parseLineToOffer(completeRow);
-        this.emit('line', parsedOffer);
+        await new Promise((resolve) => {
+          this.emit('line', parsedOffer, resolve);
+        });
       }
     }
 
