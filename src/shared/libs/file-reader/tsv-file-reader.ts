@@ -86,7 +86,7 @@ export class TSVFileReader extends EventEmitter implements FileReader {
   }
 
   private parseUser(hostName: string, hostEmail: string, hostAvatarUrl: string, hostisPro: string): UserData {
-    return { name: hostName, email: hostEmail, avatarUrl: hostAvatarUrl, isPro: String(hostisPro) };
+    return { name: hostName, email: hostEmail, avatarUrl: hostAvatarUrl, isPro: Boolean(hostisPro) };
   }
 
   public async read(): Promise<void> {
