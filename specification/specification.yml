@@ -1,0 +1,407 @@
+openapi: 3.1.0
+info:
+  title: API сервер для демо-проекта «Шесть городов».
+  description: |-
+    * Список ресурсов и маршрутов сервера «Шесть городов».
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  version: 2.0.0
+
+tags:
+  - name: offers
+    description: Действия с объявлениями.
+  - name: comments
+    description: Действия с комментариями.
+  - name: users
+    description: Действия с пользователем.
+
+paths:
+  /users/register:
+    post:
+      tags:
+        - users
+      summary: Регистрация пользователя
+      description: Регистрирует нового пользователя.
+
+      requestBody:
+        description: Информация для создания нового пользователя.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createUser'
+        required: true
+
+      responses:
+        "201":
+          description: Пользователь зарегистрирован. Объект пользователя.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+
+        "409":
+          description: Пользователь с таким email уже существует.
+
+  /users/login:
+    post:
+      tags:
+        - users
+      summary: Авторизация пользователя
+      description: Авторизует пользователя на основе логина и пароля
+
+    get:
+      tags:
+        - users
+      summary: Проверка состояния пользователя
+      description: Возвращает информацию по авторизованному пользователю
+
+  /users/{userId}/avatar:
+    post:
+      tags:
+        - users
+      summary: Загрузить изображение аватара
+      description: Загружает изображение аватара пользователя. Изображение
+        аватара должно быть в формате `png` или `jpg`.
+
+  /offers/register:
+    post:
+      tags: 
+      - offers
+      summary: Регистрация предложения
+      description: Регистрирует новое предложение по аренде.
+
+      requestBody:
+        description: Информация для создания нового предложения.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createOffer'
+        required: true
+
+      responses:
+        "201":
+          description: Предложение зарегистрировано. Объект предложения.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createOffer'
+
+        "404":
+          description: Не можем найти запрошенный ресурс.
+
+  /offers/{offerId}/update:
+    patch:
+      tags:
+        - offers
+      summary: Обновление данных предложения
+      description: Возвращает обновленные данные по предложению.
+      parameters:
+        - name: offerId
+          in: path
+          required: true
+          description: ID предложения
+          schema:
+            type: string
+
+      requestBody:
+          description: Информация для обновления предложения.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createOffer'
+          required: true
+
+      responses:
+          "201":
+            description: Предложение изменено. Объект предложения.
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/createOffer'
+
+          "404":
+            description: Не можем найти запрошенный ресурс.
+
+  /offers/{offerId}/delete:
+    delete:
+      tags:
+        - offers
+      summary: Удаление предложения
+      description: Возвращает код.
+      parameters:
+      - name: offerId
+        in: path
+        description: 'Идентификатор предложения для удаления'
+        required: true
+        schema:
+          type: integer
+        example: 1
+
+      responses:
+        "200":
+          description: Предложение удалено. 
+        "404":
+          description: 'Предложение не найдено'
+        "500":
+          description: 'Внутренняя ошибка сервера'
+
+  /offers:
+    get:
+      tags:
+        - offers
+      summary: Получение всех предложений 
+      description: Возвращает все предложения.
+
+      responses:
+          "200":
+            description: Результаты поиска по запросу. 
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/createOffer'
+
+          "404":
+            description: Не можем найти запрошенный ресурс.
+
+  /offers/{offerId}:
+    get:
+      tags:
+        - offers
+      summary: Получение детальной информации по одному предложению
+      description: Возвращает детальную информацию по ID предложения.
+      parameters:
+        - name: offerId
+          in: path
+          required: true
+          description: ID предложения
+          schema:
+            type: string
+      
+      responses:
+          "200":
+            description: Предложение успешно получено. 
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/createOffer'
+
+          "404":
+            description: Предложение не найдено.
+      
+  /offers/{offerId}/comments/register:
+    post:
+      tags:
+      - comments
+      summary: Добавить комментарий. Доступно только авторизованным клиентам
+      description: Загружает новый комментарий.
+      parameters:
+        - name: offerId
+          in: path
+          required: true
+          description: ID предложения
+          schema:
+            type: string
+
+      requestBody:
+        description: Информация для создания нового предложения.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createComment'
+        required: true
+
+      responses:
+        "201":
+          description: Комментарий зарегистрирован. Объект комментария.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createComment'
+
+
+
+  /offers/{offerId}/comments:
+    get:
+      tags:
+        - comments
+      summary: Получить комментарии к предложению. Доступно авторизованным и анонимным клиентам
+      description: Возвращает комментарии к конкретному предложению по ID.
+
+      responses:
+          "200":
+            description: Результаты поиска по запросу. 
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/createComment'
+
+          "404":
+            description: Не можем найти запрошенный ресурс.
+
+
+components:
+  schemas:
+    createUser:
+      type: object
+
+      properties:
+        email:
+          type: string
+          example: keks@htmlacademy.ru
+
+        name:
+          type: string
+          example: Keks
+
+        isPro:
+          type: boolean
+          example: true
+
+        password:
+          type: string
+          example: 123456
+
+        avatarUrl:
+          type: string
+          example: 'img/avatar-max.jpg'
+
+
+    user:
+      type: object
+
+      properties:
+        id:
+          type: string
+          example: 6329c3d6a04ab1061c6425ea
+
+        email:
+          type: string
+          example: keks@htmlacademy.ru
+
+
+    createOffer:
+      type: object
+
+      properties:
+        title:
+          type: string
+          example: Студия в центре
+
+        description:
+          type: string
+          example: То что надо
+
+        date:
+          type: string
+          format: date-time
+          example: '2017-07-21T17:32:28Z'
+
+        city:
+          type: object
+          additionalProperties: true
+          example: {
+            name: Paris,
+            latitude: 145.77000000000001,
+            longitude: 4.673877537499948
+          }
+
+        previewImage:
+          type: string
+          example: 'img/avatar-max.jpg'
+
+        images:
+          type: array
+          items:
+            type: string
+          example: ["str1", "str2", "str3"]
+
+        isPremium:
+          type: boolean
+          example: true
+
+        isFavorite:
+          type: boolean
+          example: false
+
+        rating:
+          type: number
+          example: 4.3
+
+        type:
+          type: string
+          example: house
+
+        bedrooms:
+          type: number
+          example: 3
+
+        maxAdults:
+          type: number
+          example: 7
+
+        price:
+          type: number
+          example: 145
+
+        goods:
+          type: array
+          items:
+            type: string
+          example: ["str1", "str2", "str3"]
+
+        hostId: 
+          type: string
+          example: 6af6f711-c28d-4121-82cd-e0b462a27f00
+
+        comments:
+          type: number
+          example: 7
+
+        latitude:
+          type: number
+          example: 145.77000000000001
+
+        longitude:
+          type: number
+          example: 4.673877537499948
+
+    offer:
+      type: object
+
+      properties:
+        offerId:
+          type: string
+          example: 6af6f711-c28d-4121-82cd-e0b462a27f20
+
+    createComment:
+      type: object
+
+      properties:
+        commentText:
+          type: string
+          example: Paris is wonderful city
+
+        commentRating: 
+          type: number
+          example: 5
+
+        commentAuthor: 
+          type: object
+          additionalProperties: true
+
+          example: {
+            name: Jane,
+            email: ddd@yandex.ru,
+            isPro: true,
+            avatarUrl: img/apartment-02.png
+          }
+
+
+

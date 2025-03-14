@@ -29,7 +29,7 @@ export class RestApplication {
   public async init() {
     this.logger.info(`Get value from env $PORT: ${this.config.get('PORT')}`);
 
-    this.logger.info('Init database…');
+    this.logger.info('Init database…2');
     await this.initDb();
     this.logger.info('Init database completed');
 
