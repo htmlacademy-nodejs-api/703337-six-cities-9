@@ -1,5 +1,5 @@
 import { UserData } from './user-data.js';
-import { City } from './city.js';
+import { City } from './city-type.js';
 import { RentType } from './rent-type.enum.js';
 
 export type RentCardType = {
