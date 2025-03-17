@@ -5,5 +5,5 @@ export { UserData } from './user-data.js';
 export { RentType } from './rent-type.enum.js';
 export { City } from './city-type.js';
 export { SortType } from './sort-type.enum.js';
-import { CommentData } from './comment-type.js';
+export { CommentData } from './comment-type.js';
 
