@@ -1,4 +1,4 @@
-openapi: 3.1.0
+openapi: 3.0.1
 info:
   title: API сервер для демо-проекта «Шесть городов».
   description: |-
@@ -17,7 +17,7 @@ tags:
     description: Действия с пользователем.
 
 paths:
-  /users/register:
+  /users:
     post:
       tags:
         - users
@@ -50,11 +50,19 @@ paths:
       summary: Авторизация пользователя
       description: Авторизует пользователя на основе логина и пароля
 
+      responses:
+        "201":
+          description: Пользователь авторизован. Объект пользователя.
+
     get:
       tags:
         - users
       summary: Проверка состояния пользователя
       description: Возвращает информацию по авторизованному пользователю
+
+      responses:
+        "201":
+          description: Пользователь авторизован. Объект пользователя.
 
   /users/{userId}/avatar:
     post:
@@ -63,8 +71,22 @@ paths:
       summary: Загрузить изображение аватара
       description: Загружает изображение аватара пользователя. Изображение
         аватара должно быть в формате `png` или `jpg`.
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: ID пользователя
+          schema:  
+            type: string 
 
-  /offers/register:
+      responses:
+        '200':
+          description: Аватар успешно загружен
+        
+        '404':
+          description: Пользователь с указанным userId не найден
+
+  /offers:
     post:
       tags: 
       - offers
@@ -82,15 +104,30 @@ paths:
       responses:
         "201":
           description: Предложение зарегистрировано. Объект предложения.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/createOffer'
-
+          
         "404":
           description: Не можем найти запрошенный ресурс.
 
-  /offers/{offerId}/update:
+    get:
+      tags:
+        - offers
+      summary: Получение всех предложений 
+      description: Возвращает все предложения.
+
+      responses:
+          "200":
+            description: Результаты поиска по запросу. 
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/createOffer'
+
+          "404":
+            description: Не можем найти запрошенный ресурс.
+
+  /offers/{offerId}:
     patch:
       tags:
         - offers
@@ -123,50 +160,6 @@ paths:
           "404":
             description: Не можем найти запрошенный ресурс.
 
-  /offers/{offerId}/delete:
-    delete:
-      tags:
-        - offers
-      summary: Удаление предложения
-      description: Возвращает код.
-      parameters:
-      - name: offerId
-        in: path
-        description: 'Идентификатор предложения для удаления'
-        required: true
-        schema:
-          type: integer
-        example: 1
-
-      responses:
-        "200":
-          description: Предложение удалено. 
-        "404":
-          description: 'Предложение не найдено'
-        "500":
-          description: 'Внутренняя ошибка сервера'
-
-  /offers:
-    get:
-      tags:
-        - offers
-      summary: Получение всех предложений 
-      description: Возвращает все предложения.
-
-      responses:
-          "200":
-            description: Результаты поиска по запросу. 
-            content:
-              application/json:
-                schema:
-                  type: array
-                  items:
-                    $ref: '#/components/schemas/createOffer'
-
-          "404":
-            description: Не можем найти запрошенный ресурс.
-
-  /offers/{offerId}:
     get:
       tags:
         - offers
@@ -192,8 +185,32 @@ paths:
 
           "404":
             description: Предложение не найдено.
+
+    delete:
+      tags:
+        - offers
+      summary: Удаление предложения
+      description: Возвращает код.
+      parameters:
+      - name: offerId
+        in: path
+        description: 'Идентификатор предложения для удаления'
+        required: true
+        schema:
+          type: integer
+        example: 1
+
+      responses:
+        "200":
+          description: Предложение удалено. 
+        "404":
+          description: 'Предложение не найдено'
+        "500":
+          description: 'Внутренняя ошибка сервера'
+
+    
       
-  /offers/{offerId}/comments/register:
+  /offers/{offerId}/comments:
     post:
       tags:
       - comments
@@ -223,14 +240,18 @@ paths:
               schema:
                 $ref: '#/components/schemas/createComment'
 
-
-
-  /offers/{offerId}/comments:
     get:
       tags:
         - comments
       summary: Получить комментарии к предложению. Доступно авторизованным и анонимным клиентам
       description: Возвращает комментарии к конкретному предложению по ID.
+      parameters:
+        - name: offerId
+          in: path
+          required: true
+          description: ID предложения
+          schema:
+            type: string
 
       responses:
           "200":
