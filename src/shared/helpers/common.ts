@@ -15,3 +15,7 @@ export function getRandomItem<T>(items: T[]):T {
 export function getErrorMessage(error: unknown): string {
   return error instanceof Error ? error.message : '';
 }
+
+export function getRating<T>(items: T[]):T {
+  return items.reduce((summ, curremtItem) => summ + curremtItem);
+}
