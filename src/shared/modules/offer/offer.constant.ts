@@ -1,1 +1,1 @@
-export const DEFAULT_OFFER_COUNT = 25;
+export const DEFAULT_COMMENT_COUNT = 50;
