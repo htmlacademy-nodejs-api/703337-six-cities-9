@@ -1,7 +1,8 @@
-import { UserData } from '../../../types/index.js';
 
-export class CreateCityDto {
+
+export class CreateCommentDto {
   public commentText: string;
+  public commentOfferId: string;
   public commentRating: number;
-  public commentAuthor: UserData;
+  public commentUserId: string;
 }
