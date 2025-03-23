@@ -95,10 +95,32 @@ export class DefaultOfferService implements OfferService {
           },
         },
         { $addFields:
-          { id: { $toString: '$_id'}, commentCount: { $size: '$comments'} }// добавили поле с оличеством комментариев к
+          { id: { $toString: '$_id'}, commentCount: { $size: '$comments'} }// добавили поле с оличеством комментариев
         },
         { $limit: MAX_COMMENT_COUNT },
         { $sort: { commentCount: SortType.Down } }
+      ]).exec();
+  }
+
+  public async getRating() {
+    return this.offerModel
+      .aggregate([
+        {
+          $lookup: {
+            from: 'comments',
+            let: { offerId: '$_id'},
+            pipeline: [
+              { $match: { $expr: { $in: ['$$offerId', '$commentOfferId'] } } },
+              { $project: { _id: 1, commentRating: 1}}
+            ],
+            as: 'commentsRatingAverage'
+          },
+        },
+        { $addFields:
+          { id: { $toString: '$_id'}, commentCount: { $size: '$comments'}, commentRating:{$avg: '$commentRating'} }
+        },
+        { $limit: MAX_COMMENT_COUNT },
+
       ]).exec();
   }
 
