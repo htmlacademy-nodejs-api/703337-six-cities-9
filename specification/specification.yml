@@ -76,19 +76,19 @@ paths:
           in: path
           required: true
           description: ID пользователя
-          schema:  
-            type: string 
+          schema:
+            type: string
 
       responses:
         '200':
           description: Аватар успешно загружен
-        
+
         '404':
           description: Пользователь с указанным userId не найден
 
   /offers:
     post:
-      tags: 
+      tags:
       - offers
       summary: Регистрация предложения
       description: Регистрирует новое предложение по аренде.
@@ -104,19 +104,19 @@ paths:
       responses:
         "201":
           description: Предложение зарегистрировано. Объект предложения.
-          
+
         "404":
           description: Не можем найти запрошенный ресурс.
 
     get:
       tags:
         - offers
-      summary: Получение всех предложений 
+      summary: Получение всех предложений
       description: Возвращает все предложения.
 
       responses:
           "200":
-            description: Результаты поиска по запросу. 
+            description: Результаты поиска по запросу.
             content:
               application/json:
                 schema:
@@ -132,7 +132,7 @@ paths:
       tags:
         - offers
       summary: Обновление данных предложения
-      description: Возвращает обновленные данные по предложению.
+      description: Возвращает обновленные данные по предложению.Доступен только авторизованные клиенты.
       parameters:
         - name: offerId
           in: path
@@ -172,10 +172,10 @@ paths:
           description: ID предложения
           schema:
             type: string
-      
+
       responses:
           "200":
-            description: Предложение успешно получено. 
+            description: Предложение успешно получено.
             content:
               application/json:
                 schema:
@@ -198,18 +198,18 @@ paths:
         required: true
         schema:
           type: integer
-        example: 1
+          example: 1
 
       responses:
         "200":
-          description: Предложение удалено. 
+          description: Предложение удалено.
         "404":
           description: 'Предложение не найдено'
         "500":
           description: 'Внутренняя ошибка сервера'
 
-    
-      
+
+
   /offers/{offerId}/comments:
     post:
       tags:
@@ -255,7 +255,7 @@ paths:
 
       responses:
           "200":
-            description: Результаты поиска по запросу. 
+            description: Результаты поиска по запросу.
             content:
               application/json:
                 schema:
@@ -266,6 +266,68 @@ paths:
           "404":
             description: Не можем найти запрошенный ресурс.
 
+  /offers/{cityId}/premium:
+    get:
+      tags:
+      - offers
+      summary: Получить премиальные предложения. Ресурс доступен авторизованным и анонимным клиентам. Сервис возвращает не больше 3 предложений с флагом «Premium»
+      description: Возвращает премиальные предложения.
+      parameters:
+        - name: cityId
+          in: path
+          required: true
+          description: ID города
+          schema:
+            type: string
+      responses:
+          "200":
+            description: Нашли премиальные предложения по вашему городу.
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/offerFavorite'
+
+          "404":
+            description: Не можем найти запрошенный ресурс.
+
+  /offers/favorite:
+    get:
+      tags:
+      - offers
+      summary: Получить избранные предложения. Ресурс доступен только авторизованным клиентам.
+      description: Возвращает избранные предложения.
+      responses:
+          "200":
+            description: Результаты поиска по запросу.
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/offerFavorite'
+
+          "404":
+            description: Не можем найти запрошенный ресурс.
+
+    post:
+      tags:
+      - offers
+      summary: Добавить предложение в избранное. Доступно только авторизованным клиентам
+      description: Добавляет предложение в избранное.
+      responses:
+        "201":
+          description: Предложение добавлено в избранное.
+
+    delete:
+      tags:
+      - offers
+      summary: Удалить предложение из избранного. Доступно только авторизованным клиентам
+      description: Удаляет предложение из избранного.
+      responses:
+        "201":
+          description: Предложение удалено из избранного.
 
 components:
   schemas:
@@ -377,7 +439,7 @@ components:
             type: string
           example: ["str1", "str2", "str3"]
 
-        hostId: 
+        hostId:
           type: string
           example: 6af6f711-c28d-4121-82cd-e0b462a27f00
 
@@ -393,13 +455,59 @@ components:
           type: number
           example: 4.673877537499948
 
-    offer:
+    offerFavorite:
       type: object
 
       properties:
         offerId:
           type: string
           example: 6af6f711-c28d-4121-82cd-e0b462a27f20
+
+        price:
+          type: number
+          example: 145
+
+        title:
+          type: string
+          example: Студия в центре
+
+        type:
+          type: string
+          example: house
+
+        isFavorite:
+          type: boolean
+          example: false
+
+        date:
+          type: string
+          format: date-time
+          example: '2017-07-21T17:32:28Z'
+
+        city:
+          type: object
+          additionalProperties: true
+          example: {
+            name: Paris,
+            latitude: 145.77000000000001,
+            longitude: 4.673877537499948
+          }
+
+        previewImage:
+          type: string
+          example: 'img/avatar-max.jpg'
+
+        isPremium:
+          type: boolean
+          example: true
+
+        rating:
+          type: number
+          example: 4.3
+
+        comments:
+          type: number
+          example: 7
 
     createComment:
       type: object
@@ -409,11 +517,11 @@ components:
           type: string
           example: Paris is wonderful city
 
-        commentRating: 
+        commentRating:
           type: number
           example: 5
 
-        commentAuthor: 
+        commentAuthor:
           type: object
           additionalProperties: true
 
