@@ -1,0 +1,18 @@
+# Категории
+## Получить список категорий
+GET http://localhost:5000/cities HTTP/1.1
+Content-Type: application/json
+
+###
+
+## Добавить новую категорию
+POST http://localhost:5000/cities HTTP/1.1
+Content-Type: application/json
+
+{
+  "name": "Цветы",
+  "latitude": 27,
+  "longitude": 45
+}
+
+###
