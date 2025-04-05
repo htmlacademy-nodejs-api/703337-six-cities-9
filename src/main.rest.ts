@@ -18,7 +18,7 @@ async function bootstrap() {
   await application.init();
 }
 bootstrap();
-// console.log('jjj')
+
 // docker compose \
 // --file ./docker-compose.dev.yml \
 // --env-file ./.env \
