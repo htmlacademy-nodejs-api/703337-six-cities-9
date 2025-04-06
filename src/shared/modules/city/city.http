@@ -1,16 +1,16 @@
 # Категории
-## Получить список категорий
+## Получить список городов
 GET http://localhost:5000/cities HTTP/1.1
 Content-Type: application/json
 
 ###
 
-## Добавить новую категорию
+## Добавить новый город
 POST http://localhost:5000/cities HTTP/1.1
 Content-Type: application/json
 
 {
-  "name": "Цветы",
+  "name": "Краснодар",
   "latitude": 27,
   "longitude": 45
 }

@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify';
 import { Request, Response } from 'express';
-import { BaseController, HttpMethod } from '../../libs/rest/index.js';
+import { BaseController, HttpMethod, HttpError } from '../../libs/rest/index.js';
 import { Logger } from '../../libs/logger/index.js';
 import { Component } from '../../types/index.js';
 import { CityService } from './city-service.interface.js';
@@ -26,6 +26,7 @@ export class CityController extends BaseController {
 
   public async index(_req: Request, res: Response): Promise<void> {
     const cities = await this.cityService.find();
+
     const responseData = fillDTO(CityRdo, cities);
     this.ok(res, responseData);
   }
@@ -38,16 +39,15 @@ export class CityController extends BaseController {
     const existCity = await this.cityService.findByCityName(body.name);
 
     if (existCity) {
-      const existCityError = new Error(`City with name «${body.name}» exists.`);
-      this.send(res,
+      throw new HttpError(
         StatusCodes.UNPROCESSABLE_ENTITY,
-        { error: existCityError.message }
+        `City with name «${body.name}» exists.`,
+        'CategoryController'
       );
-
-      return this.logger.error(existCityError.message, existCityError);
     }
 
     const result = await this.cityService.create(body);
+    console.log(result)
     this.created(res, fillDTO(CityRdo, result));
   }
 }
