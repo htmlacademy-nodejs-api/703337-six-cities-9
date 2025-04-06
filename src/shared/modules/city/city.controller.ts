@@ -47,7 +47,7 @@ export class CityController extends BaseController {
     }
 
     const result = await this.cityService.create(body);
-    console.log(result)
+
     this.created(res, fillDTO(CityRdo, result));
   }
 }
