@@ -1,0 +1,25 @@
+# Пользователи
+## Создать нового пользователя
+
+POST http://localhost:5000/users HTTP/1.1
+Content-Type: application/json
+
+{
+  "email": "torans@overlook.net",
+  "avatarUrl": "torrance.png",
+  "name": "Jack",
+  "isPro": true,
+  "password": "shining"
+}
+
+###
+
+## Авторизовать пользователя
+
+POST http://localhost:5000/users/login HTTP/1.1
+Content-Type: application/json
+
+{
+  "email": "torans@overlook.net",
+  "password": "shining"
+}

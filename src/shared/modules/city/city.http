@@ -1,0 +1,18 @@
+# Категории
+## Получить список городов
+GET http://localhost:5000/cities HTTP/1.1
+Content-Type: application/json
+
+###
+
+## Добавить новый город
+POST http://localhost:5000/cities HTTP/1.1
+Content-Type: application/json
+
+{
+  "name": "Краснодар",
+  "latitude": 27,
+  "longitude": 45
+}
+
+###
